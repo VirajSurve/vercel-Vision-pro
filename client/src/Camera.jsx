@@ -59,9 +59,11 @@ const Camera = () => {
       bottomBar.style.transform = ans ? "translateY(0)" : "translateY(100%)";
     }
   }, [ans]);
-  
+
   //check
-  axios.defaults.withCredentials=true;
+  axios.defaults.withCredentials = true;
+  axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://vercel-vision-pro-backend.vercel.app' : 'http://localhost:3000';
+
 
   const captureImage = async () => {
     if (videoRef.current && canvasRef.current) {
