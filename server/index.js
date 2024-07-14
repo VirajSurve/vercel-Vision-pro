@@ -75,37 +75,43 @@ const generationConfig = {
 
 app.post('/upload', async (req, res) => {
   const { base64Image, mimeType, filename } = req.body;
+  console.log("Received upload request with data:", { base64Image: base64Image.substring(0, 30) + "...", mimeType, filename });
   try {
-    const file = await uploadBase64ToGemini(base64Image, mimeType, filename);
-    if (!file) {
-      throw new Error('Failed to upload file');
-    }
+     const file = await uploadBase64ToGemini(base64Image, mimeType, filename);
+     if (!file) {
+        throw new Error('Failed to upload file');
+     }
 
-    chatSession = model.startChat({
-      generationConfig,
-      history: [
-        {
-          role: "user",
-          parts: [
-            {
-              fileData: {
-                mimeType: file.mimeType,
-                fileUri: file.uri,
+     // Ensure chatSession is initialized
+     if (!chatSession) {
+        chatSession = await model.startChat({
+           generationConfig,
+           history: [
+              {
+                 role: "user",
+                 parts: [
+                    {
+                       fileData: {
+                          mimeType: file.mimeType,
+                          fileUri: file.uri,
+                       },
+                    },
+                 ],
               },
-            },
-          ],
-        },
-      ],
-    });
+           ],
+        });
+     }
 
-    const result = await chatSession.sendMessage("what do you see");
-    console.log(result.response.text());
-    res.json(result.response.text());
+     const result = await chatSession.sendMessage("what do you see");
+     const responseText = await result.response.text();
+     console.log("Chat session response:", responseText);
+     res.json(responseText);
   } catch (error) {
-    console.error('Error (Server) uploading file:', error);
-    res.status(500).json({ error: 'Failed to process request' });
+     console.error('Error (Server) uploading file:', error);
+     res.status(500).json({ error: 'Failed to process request' });
   }
 });
+
 
 app.post('/chat', async (req, res) => {
   const { userText } = req.body;
