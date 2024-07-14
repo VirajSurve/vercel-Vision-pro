@@ -59,6 +59,9 @@ const Camera = () => {
       bottomBar.style.transform = ans ? "translateY(0)" : "translateY(100%)";
     }
   }, [ans]);
+  
+  //check
+  axios.defaults.withCredentials=true;
 
   const captureImage = async () => {
     if (videoRef.current && canvasRef.current) {
