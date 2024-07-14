@@ -1,5 +1,5 @@
 import express from 'express';
-import cors from 'cors'; // Import cors package
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
@@ -7,33 +7,27 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from "url";
 
-// Your actual API key
-const apiKey = "AIzaSyD2JwFzqCf9bzMtm2TsdZzrd2_td-RW6CE"; // Replace with your actual API key
+const apiKey = "AIzaSyD2JwFzqCf9bzMtm2TsdZzrd2_td-RW6CE"; 
 const genAI = new GoogleGenerativeAI(apiKey);
 const fileManager = new GoogleAIFileManager(apiKey);
 
-// Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors(
-  {
-    origin:["https://vercel-vision-pro-client.vercel.app/"],
-    methods:["POST","GET"],
-    credentials:true
-  }
-)); // Use cors middleware
+app.use(cors({
+  origin: "https://vercel-vision-pro-client.vercel.app",
+  methods: ["POST", "GET"],
+  credentials: true
+}));
+app.options('*', cors());
 
 app.use(bodyParser.json());
 
-//test
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.json("Hello");
 });
 
-
-// Initialize chat session outside of endpoints
 let chatSession;
 
 async function uploadBase64ToGemini(base64Data, mimeType, filename) {
@@ -67,10 +61,9 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-// Initialize chat session here
 (async () => {
   try {
-    const chatSession = await model.startChat({
+    chatSession = await model.startChat({
       generationConfig,
       history: [],
     });
@@ -80,46 +73,39 @@ const generationConfig = {
   }
 })();
 
-
 app.post('/upload', async (req, res) => {
-    const { base64Image, mimeType, filename } = req.body;
-    try {
-      const file = await uploadBase64ToGemini(base64Image, mimeType, filename);
-      if (!file) {
-        throw new Error('Failed to upload file');
-      }
-  
-    //   // Ensure chatSession is initialized
-    //   if (!chatSession) {
-    //     throw new Error('Chat session not initialized');
-    //   }
+  const { base64Image, mimeType, filename } = req.body;
+  try {
+    const file = await uploadBase64ToGemini(base64Image, mimeType, filename);
+    if (!file) {
+      throw new Error('Failed to upload file');
+    }
 
     chatSession = model.startChat({
-        generationConfig,
-        history: [
-          {
-            role: "user",
-            parts: [
-              {
-                fileData: {
-                  mimeType: file.mimeType,
-                  fileUri: file.uri,
-                },
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [
+            {
+              fileData: {
+                mimeType: file.mimeType,
+                fileUri: file.uri,
               },
-            ],
-          },
-        ],
-      });
-  
-      const result = await chatSession.sendMessage("what do you see");
-      console.log(result.response.text());
-      res.json(result.response.text());
-    } catch (error) {
-      console.error('Error (Server) uploading file:', error);
-      res.status(500).json({ error: 'Failed to process request' });
-    }
-  });
-  
+            },
+          ],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage("what do you see");
+    console.log(result.response.text());
+    res.json(result.response.text());
+  } catch (error) {
+    console.error('Error (Server) uploading file:', error);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
 
 app.post('/chat', async (req, res) => {
   const { userText } = req.body;
@@ -136,4 +122,3 @@ app.post('/chat', async (req, res) => {
 app.listen(3001, '0.0.0.0', () => {
   console.log('Server is running on port 3001');
 });
-
