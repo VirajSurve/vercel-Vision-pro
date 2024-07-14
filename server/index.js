@@ -108,7 +108,7 @@ app.post('/upload', async (req, res) => {
      res.json(responseText);
   } catch (error) {
      console.error('Error (Server) uploading file:', error);
-     res.status(500).json({ error: 'Failed to process request' });
+     res.status(500).json({ error: 'Failed to process request', details: error.message });
   }
 });
 
@@ -121,7 +121,7 @@ app.post('/chat', async (req, res) => {
     res.json(result.response.text());
   } catch (err) {
     console.error("Error (server) in sending the text", err);
-    res.status(500).json({ error: 'Failed to send message' });
+    res.status(500).json({ error: 'Failed to send message', details: err.message });
   }
 });
 
