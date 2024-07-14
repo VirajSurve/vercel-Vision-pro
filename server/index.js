@@ -17,8 +17,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors()); // Use cors middleware
+app.use(cors(
+  {
+    origin:["https://vercel-vision-pro-backend.vercel.app"],
+    methods:["POST","GET"],
+    credentials:true
+  }
+)); // Use cors middleware
+
 app.use(bodyParser.json());
+
+//test
+app.get("/",(req,res)=>{
+  res.json("Hello");
+});
+
 
 // Initialize chat session outside of endpoints
 let chatSession;
