@@ -1,11 +1,8 @@
-// vite.config.js
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: '0.0.0.0',
-    port: 3000, // Ensure the port is 3000
-  }
-});
+  root: 'src', // Adjust the root directory as needed
+  build: {
+    outDir: 'dist', // Adjust the output directory if needed
+  },
+})
