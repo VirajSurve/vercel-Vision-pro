@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Video Screen */
+.videoScreen {
+    background-color: rgb(0, 0, 0);
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.videoScreen video,
+.videoScreen canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Capture Button with live gradient */
+.captureButton {
+    border: none;
+    position: absolute;
+    bottom: 10%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff80, #00ffff, #0080ff, #8000ff, #ff00ff);
+    background-size: 300% 300%;
+    animation: gradient 5s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.captureButton svg {
+    padding: 2px;
+    height: 100%;
+    width: 100%;
+}
+
+/* Bottom Bar */
+.bottomBar {
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    z-index: 1;
+    transform: translateY(90%);
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Highlight ans div */
+.result {
+    position: relative;
+    background-color: #ffffff;
+    box-shadow: 0 20px 15px #ccc5c5;
+    padding: 10px;
+    border-radius: 40px;
+    background: linear-gradient(to bottom, #ffffff, #ccc5c5);
+}
+
+/* Chatbot and User Chat Divs with gradients */
+.chatbot {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+.chatbot.bg-red-500 {
+    background: linear-gradient(to right, #ff4e50, #f9d423);
+}
+
+.chatbot.bg-blue-500 {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+}
+
+/* Chat */
+.chat {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Search Bar */
+.searchBar {
+    box-shadow: 0 0 4px 4px #00000076;
+    left: 10%;
+    right: 10%;
+    padding: 5px;
+    background: linear-gradient(to right, #f7ff00, #db36a4);
+    border-radius: 50px;
+}
+
+.search {
+    background: transparent;
+}
+
+.search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+}
+
+.sendbtn {
+    background: transparent;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Draggable Bar */
+.bar {
+    cursor: grab;
+}
