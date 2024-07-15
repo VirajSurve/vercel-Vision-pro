@@ -62,7 +62,7 @@ const Camera = () => {
 
   //check
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://render-vision-pro-backend.onrender.com' : 'http://localhost:3000';
+  // axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://render-vision-pro-backend.onrender.com' : 'http://localhost:3000';
 
 
   const captureImage = async () => {
