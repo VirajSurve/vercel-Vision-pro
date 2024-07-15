@@ -62,7 +62,7 @@ const Camera = () => {
 
   //check
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://vercel-vision-pro-backend.vercel.app' : 'http://localhost:3000';
+  axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://render-vision-pro-backend.onrender.com' : 'http://localhost:3000';
 
 
   const captureImage = async () => {
@@ -81,7 +81,7 @@ const Camera = () => {
         const filename = "image1.jpeg"; // Name of the temporary file
         const mimeType = "image/jpeg"; // Correct MIME type
   
-        const result = await axios.post("https://vercel-vision-pro-backend.vercel.app/upload", {
+        const result = await axios.post("https://render-vision-pro-backend.onrender.com/upload", {
           base64Image,
           mimeType,
           filename,
@@ -116,7 +116,7 @@ const Camera = () => {
     setMessages([...messages, { txt: userText, isBot: false }]);
 
     if (capturedImage) {
-      const result=await axios.post("https://vercel-vision-pro-backend.vercel.app/chat",{
+      const result=await axios.post("https://render-vision-pro-backend.onrender.com/chat",{
         userText,
       });
       const responseText = result.data;
