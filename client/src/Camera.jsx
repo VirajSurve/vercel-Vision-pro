@@ -77,7 +77,9 @@ const Camera = () => {
   
       try {
         const base64Image = canvas.toDataURL('image/jpeg').split(',')[1]; // Extract base64 data
-        console.log('Base64 image:', base64Image);
+        if (!base64Image) {
+          throw new Error('Failed to capture image');
+        }
         const filename = "image1.jpeg"; // Name of the temporary file
         const mimeType = "image/jpeg"; // Correct MIME type
   
@@ -90,7 +92,7 @@ const Camera = () => {
         const responseText = result.data; // Access response data directly
   
         setCapturedImage(base64Image);
-        console.log("response text=> ",responseText);
+        console.log("response text=> ", responseText);
         setAns(responseText);
       } catch (err) {
         console.error("Error (client) occurred in uploading the image", err);
@@ -111,17 +113,23 @@ const Camera = () => {
   };
 
   const handleSend = async () => {
-    const userText = input;
+    const userText = input.trim();
+    if (!userText) {
+      console.error('Empty input');
+      return;
+    }
     setInput("");
     setMessages([...messages, { txt: userText, isBot: false }]);
-
+  
     if (capturedImage) {
-      const result=await axios.post("https://render-vision-pro-backend.onrender.com/chat",{
-        userText,
-      });
-      const responseText = result.data;
-      setMessages([...messages, { txt: userText, isBot: false }, { txt: responseText, isBot: true }]);
-      console.log("result: ", responseText);
+      try {
+        const result = await axios.post("https://render-vision-pro-backend.onrender.com/chat", { userText });
+        const responseText = result.data;
+        setMessages((prevMessages) => [...prevMessages, { txt: responseText, isBot: true }]);
+        console.log("result: ", responseText);
+      } catch (err) {
+        console.error("Error (client) in sending message", err);
+      }
     } else {
       console.error("Captured (client) image is null or chat session is not initialized.");
     }
